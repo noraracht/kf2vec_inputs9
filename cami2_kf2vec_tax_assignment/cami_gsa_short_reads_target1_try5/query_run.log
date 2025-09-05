@@ -1,0 +1,159 @@
+
+==> Input arguments...
+
+Query directory: /expanse/lustre/scratch/erachtma/temp_project/tree_of_life/anonymous_gsa_pooled_5kfilt_contigs_kf/target1
+Model directory: /expanse/lustre/scratch/erachtma/temp_project/tree_of_life/k7_v42_8k_s28_train_model_65K_TOL_ChunksExp_MODEL
+Class information: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5
+Seed: 28
+
+==> Querying...
+
+Total subtrees to query: 16
+
+==> Working on subtree 10 (7531 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_10.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_10.emb
+
+==> Computation is completed for subtree 10!
+
+Time: 00:00:50
+
+==> Working on subtree 13 (2139 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_13.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_13.emb
+
+==> Computation is completed for subtree 13!
+
+Time: 00:01:05
+
+==> Working on subtree 6 (282 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_6.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_6.emb
+
+==> Computation is completed for subtree 6!
+
+Time: 00:01:07
+
+==> Working on subtree 3 (234 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_3.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_3.emb
+
+==> Computation is completed for subtree 3!
+
+Time: 00:01:10
+
+==> Working on subtree 11 (2797 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_11.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_11.emb
+
+==> Computation is completed for subtree 11!
+
+Time: 00:01:28
+
+==> Working on subtree 14 (1082 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_14.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_14.emb
+
+==> Computation is completed for subtree 14!
+
+Time: 00:01:35
+
+==> Working on subtree 2 (430 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_2.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_2.emb
+
+==> Computation is completed for subtree 2!
+
+Time: 00:01:39
+
+==> Working on subtree 15 (2009 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_15.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_15.emb
+
+==> Computation is completed for subtree 15!
+
+Time: 00:01:51
+
+==> Working on subtree 12 (715 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_12.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_12.emb
+
+==> Computation is completed for subtree 12!
+
+Time: 00:01:56
+
+==> Working on subtree 5 (455 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_5.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_5.emb
+
+==> Computation is completed for subtree 5!
+
+Time: 00:02:01
+
+==> Working on subtree 4 (578 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_4.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_4.emb
+
+==> Computation is completed for subtree 4!
+
+Time: 00:02:06
+
+==> Working on subtree 9 (1266 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_9.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_9.emb
+
+==> Computation is completed for subtree 9!
+
+Time: 00:02:14
+
+==> Working on subtree 8 (379 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_8.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_8.emb
+
+==> Computation is completed for subtree 8!
+
+Time: 00:02:17
+
+==> Working on subtree 1 (172 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_1.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_1.emb
+
+==> Computation is completed for subtree 1!
+
+Time: 00:02:18
+
+==> Working on subtree 0 (154 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_0.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_0.emb
+
+==> Computation is completed for subtree 0!
+
+Time: 00:02:20
+
+==> Working on subtree 7 (69 contigs)...
+
+Wrote distance matrix: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/apples_input_di_mtrx_subtree_7.csv
+Wrote embeddings: /expanse/lustre/scratch/erachtma/temp_project/kmer_placemnt/variable_k/cami_gsa_short_reads_target1_try5/embedding_subtree_7.emb
+
+==> Computation is completed for subtree 7!
+
+Time: 00:02:22
+
+==> Computation Completed!
+
+Total time: 00:02:22
