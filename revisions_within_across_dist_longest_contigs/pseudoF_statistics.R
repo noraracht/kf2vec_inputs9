@@ -238,12 +238,45 @@ ggplot(aes(x=reorder(Condition, -value),y=value,fill=Condition))+
   scale_x_discrete( labels = c('CVtree', 'JS', 'Ma', 'Eu',expression(italic("D")[italic("2")]^italic("*")), 'Cosine',  expression(italic("D")[italic("2")]^italic("S")), 'kf2vec', expression(atop("kf2vec/", "FastME2")) )) +
   theme_classic()+
   xlab(NULL) +
-  scale_y_continuous("closest contig mismatch",labels = percent)+
+  scale_y_continuous("Closest contig mismatch",labels = percent)+
   theme(legend.position = "none")
   #theme(
   #  axis.text.x = element_text(lineheight = 0.3)  # only affects x-axis labels
   #)# 
 ggsave("contigs_across_within_bar_D3.pdf",width=4.8,height = 4.0)
+
+
+
+# Annotated
+
+merge(sibling,pF,by="Condition") %>%
+  mutate(pFi = 1/pF) %>%
+  select(Condition, errorrate, pFi) %>%
+  filter(Condition != "cafe_phylip_co-phylog") %>%
+  filter(Condition != "kf2vec_after_placement") %>%
+  pivot_longer(cols=2:3) %>%
+  filter(name == "errorrate") %>%
+  ggplot(aes(x=reorder(Condition, -value), y=value, fill=Condition)) +
+  geom_bar(stat="identity", position=position_dodge(), color="black") +
+  geom_text(aes(label = scales::percent(value, accuracy = 0.1)), 
+            vjust = -0.3, size=3.5) +  # annotate with percent values
+  scale_fill_manual(values = c(
+    dark2_colors[7], dark2_colors[6], dark2_colors[6], dark2_colors[6],
+    dark2_colors[7], dark2_colors[7], dark2_colors[7],
+    dark2_colors[5], dark2_colors[5]
+  )) +
+  scale_x_discrete(labels = c(
+    'CVtree', 'JS', 'Ma', 'Eu',
+    expression(italic("D")[italic("2")]^italic("*")),
+    'Cosine',
+    expression(italic("D")[italic("2")]^italic("S")),
+    'kf2vec',
+    expression(atop("kf2vec/", "FastME2"))
+  )) +
+  theme_classic() +
+  xlab(NULL) +
+  scale_y_continuous("Closest contig mismatch", labels = scales::percent) +
+  theme(legend.position = "none")
 
 
 
