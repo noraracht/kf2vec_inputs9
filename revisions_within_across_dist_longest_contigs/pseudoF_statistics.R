@@ -16,6 +16,7 @@ library(ggpubr)
 library(stringr)
 
 library(dplyr)
+library(data.table)
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 #setwd('/Users/admin/Documents/support')
@@ -36,260 +37,198 @@ set1_colors
 accent_colors <-brewer.pal(n = 8, name = "Accent")
 accent_colors
 
+# Some entries are NAs
+#dist_emb=read.csv('k7_v39_8k_s28_clade_All_TOL_Contigs_Global_logest/distances_kf2vec_emb_R.txt',sep="\t",header=TRUE)
+#dist_pl=read.csv('k7_v39_8k_s28_clade_All_TOL_Contigs_Global_logest/distances_kf2vec_placement_R.txt',sep="\t",header=TRUE)
+#dist_fastme=read.csv('fastme/distances_kf2vec_fastme_R.txt',sep="\t",header=TRUE)
 
-dist_emb=read.csv('k7_v39_8k_s28_clade_All_TOL_Contigs_Global_logest/distances_kf2vec_emb_R.txt',sep="\t",header=TRUE)
-dist_pl=read.csv('k7_v39_8k_s28_clade_All_TOL_Contigs_Global_logest/distances_kf2vec_placement_R.txt',sep="\t",header=TRUE)
-dist_fastme=read.csv('fastme/distances_kf2vec_fastme_R.txt',sep="\t",header=TRUE)
+#dist_d2star=read.csv('cafe_dist/pairwise_distances_cafe_d2star_phylip_R.txt',sep="\t",header=TRUE)
+#dist_d2shepp=read.csv('cafe_dist/pairwise_distances_cafe_d2shepp_phylip_R.txt',sep="\t",header=TRUE)
+#dist_cvtree=read.csv('cafe_dist/pairwise_distances_cafe_cvtree_phylip_R.txt',sep="\t",header=TRUE)
+#dist_cosine=read.csv('cafe_dist/pairwise_distances_cafe_cosine_phylip_R.txt',sep="\t",header=TRUE)
 
-dist_d2star=read.csv('cafe_dist/pairwise_distances_cafe_d2star_phylip_R.txt',sep="\t",header=TRUE)
-dist_d2shepp=read.csv('cafe_dist/pairwise_distances_cafe_d2shepp_phylip_R.txt',sep="\t",header=TRUE)
-dist_cvtree=read.csv('cafe_dist/pairwise_distances_cafe_cvtree_phylip_R.txt',sep="\t",header=TRUE)
-dist_cosine=read.csv('cafe_dist/pairwise_distances_cafe_cosine_phylip_R.txt',sep="\t",header=TRUE)
-
-dist_cophylog=read.csv('cafe_dist/pairwise_distances_cafe_co-phylog_phylip_R.txt',sep="\t",header=TRUE)
-dist_eu=read.csv('cafe_dist/pairwise_distances_cafe_eu_phylip_R.txt',sep="\t",header=TRUE)
-dist_js=read.csv('cafe_dist/pairwise_distances_cafe_js_phylip_R.txt',sep="\t",header=TRUE)
-dist_ma=read.csv('cafe_dist/pairwise_distances_cafe_ma_phylip_R.txt',sep="\t",header=TRUE)
-
-#dist_all <- rbind(dist_emb, dist_pl, dist_fastme)
-#colnames(dist_all)
-
-dfs <- list(dist_emb, dist_pl, dist_fastme, dist_d2star, dist_d2shepp, dist_cvtree, dist_cosine, dist_cophylog, dist_eu, dist_js, dist_ma)
-
-
-# 1. Find common (Contig1, Contig2) pairs across all dataframes
-common_pairs <- Reduce(function(x, y) inner_join(x, y, by = c("Contig1","Contig2")),
-                       lapply(dfs, function(df) df %>% select(Contig1, Contig2)))
-
-# 2. Sample 30% of the common pairs
-set.seed(123)  # reproducible
-sampled_pairs <- sample_frac(common_pairs, 1)
-
-# 3. Subset all dataframes to the sampled pairs
-dfs_sub <- lapply(dfs, function(df) semi_join(df, sampled_pairs, by = c("Contig1","Contig2")))
-
-
-combined_df <- bind_rows(dfs_sub)
-
-# Example: access subsetted dataframes
-#df1_sub <- dfs_sub[[1]]
-#df2_sub <- dfs_sub[[2]]
-
-
-ggplot(aes(x=Condition, y=Distance_scaled, color = Type),
-       data=combined_df)+
-  #stat_summary(geom="crossbar")+
-  #stat_summary(geom="point")+
-  #geom_violin()+
-  stat_summary()+
-  #geom_boxplot() +
-  theme_classic()
-  
+#dist_cophylog=read.csv('cafe_dist/pairwise_distances_cafe_co-phylog_phylip_R.txt',sep="\t",header=TRUE)
+#dist_eu=read.csv('cafe_dist/pairwise_distances_cafe_eu_phylip_R.txt',sep="\t",header=TRUE)
+#dist_js=read.csv('cafe_dist/pairwise_distances_cafe_js_phylip_R.txt',sep="\t",header=TRUE)
+#dist_ma=read.csv('cafe_dist/pairwise_distances_cafe_ma_phylip_R.txt',sep="\t",header=TRUE)
 
 
 
-summarise
+# Filtered subset include only contig pairs that are shared between samples
+#dist_emb=read.csv('filtered/dist_emb_filtered.csv',sep="\t",header=TRUE)
+#dist_pl=read.csv('filtered/dist_pl_filtered.csv',sep="\t",header=TRUE)
+#dist_fastme=read.csv('filtered/dist_fastme_filtered.csv',sep="\t",header=TRUE)
 
-combined_df %>% 
-  distinct(Condition, Type)
+#dist_d2star=read.csv('filtered/dist_d2star_filtered.csv',sep="\t",header=TRUE)
+#dist_d2shepp=read.csv('filtered/dist_d2shepp_filtered.csv',sep="\t",header=TRUE)
+#dist_cvtree=read.csv('filtered/dist_cvtree_filtered.csv',sep="\t",header=TRUE)
+#dist_cosine=read.csv('filtered/dist_cosine_filtered.csv',sep="\t",header=TRUE)
 
-combined_df %>%
-  group_by(Condition, Type) %>%
-  dplyr::summarise(mD=median(Distance)) %>% 
- # head
-  pivot_wider(names_from = "Type",values_from = "mD" ) %>%
-  mutate(pF=Across/Within)
-
-head(combined_df)
-
-df_summary
-
-
-# Table included in a paper
-df_summary <- combined_df %>%
-  group_by(Condition, Type) %>%
-  dplyr::summarise(mD=mean(Distance))%>%
-  pivot_wider(names_from = "Type", values_from = "mD" ) %>%
-  mutate(pF=Across/Within)%>%
-  mutate(Across = if_else(grepl("kf2vec", Condition), Across / 100, Across))%>%
-mutate(Within = if_else(grepl("kf2vec", Condition), Within / 100, Within))%>%
-# Round numbers for display
-mutate(
-  Across   = round(Across, 3),
-  Within   = round(Within, 3),
-  pF = round(pF, 2)
-)
-#df_summary$pF <- format(df_summary$pF, scientific = FALSE, nsmall = 6)
-#print(df_summary)
-
-#df_summary <- df_summary %>%
-#  mutate(Across = if_else(grepl("kf2vec", Condition), Across / 100, Across))
-
-print(as.data.frame(df_summary))
+#dist_cophylog=read.csv('filtered/dist_cophylog_filtered.csv',sep="\t",header=TRUE)
+#dist_eu=read.csv('filtered/dist_eu_filtered.csv',sep="\t",header=TRUE)
+#dist_js=read.csv('filtered/dist_js_filtered.csv',sep="\t",header=TRUE)
+#dist_ma=read.csv('filtered/dist_ma_filtered.csv',sep="\t",header=TRUE)
 
 
 
+ 
+#dfs <- list(dist_emb, dist_pl, dist_fastme, dist_d2star, dist_d2shepp, dist_cvtree, dist_cosine, dist_eu, dist_js, dist_ma)
 
-# Table included in a paper (median)
-df_summary <- combined_df %>%
-  group_by(Condition, Type) %>%
-  dplyr::summarise(mD=median(Distance))%>%
-  pivot_wider(names_from = "Type", values_from = "mD" ) %>%
-  mutate(pF=Across/Within)%>%
-  mutate(Across = if_else(grepl("kf2vec", Condition), Across / 100, Across))%>%
-  mutate(Within = if_else(grepl("kf2vec", Condition), Within / 100, Within))%>%
-  # Round numbers for display
-  mutate(
-    Across   = round(Across, 3),
-    Within   = round(Within, 3),
-    pF = round(pF, 2)
-  )
-#df_summary$pF <- format(df_summary$pF, scientific = FALSE, nsmall = 6)
-#print(df_summary)
-
-#df_summary <- df_summary %>%
-#  mutate(Across = if_else(grepl("kf2vec", Condition), Across / 100, Across))
-
-print(as.data.frame(df_summary))
+#combined_df <- rbind(dist_emb, dist_ma, dist_js, dist_eu, dist_cophylog,  dist_cosine, dist_cvtree, dist_d2shepp, dist_d2star,  dist_fastme, dist_pl )
 
 
 
+combined_df <- fread("pairwise_distances_kf2vec_cafe_R.txt", sep="\t", data.table = FALSE)
 
-pF = combined_df %>%
-  group_by(Condition, Type) %>%
-  dplyr::summarise(mD = round(mean(Distance, na.rm = TRUE), 4)) %>%
-  pivot_wider(names_from = "Type", values_from = "mD") %>%
-  mutate(pF = Across/Within)
+#combined_df=read.csv("pairwise_distances_kf2vec_cafe_R.txt",sep="\t", header=TRUE)
 
-combined_df %>%
-  group_by(Condition, Type) %>%
-  dplyr::summarise(mD = round(mean(Distance, na.rm = TRUE), 4)) #%>%
-  pivot_wider(names_from = "Type", values_from = "mD") %>%
-  mutate(pF = Across/Within)
+unique(combined_df$Condition)
+
+#combined_df[combined_df$Condition=="cafe_phylip_js","Distance"]=1-combined_df[combined_df$Condition=="cafe_phylip_js","Distance"]
+#combined_df[combined_df$Condition == "cafe_phylip_js", "Distance"] <- sqrt(combined_df[combined_df$Condition == "cafe_phylip_js", "Distance"])
 
 
-combined_df %>%
-  group_by(Condition, Type) %>%
-  dplyr::summarise(mD=mean(Distance))%>%  # compute mean
-  print(n = 22)   
+nrow(combined_df)
 
-
-stat_summary(fun.data = "mean_cl_boot",size = 1, alpha = 0.7)+
-  coord_cartesian(ylim=c(0,10))
-#theme_classic()
 
 combined_df2 = combined_df
 combined_df2$Contig2 = combined_df$Contig1
 combined_df2$Contig1 = combined_df$Contig2
+combined_df2$Sample1 = combined_df$Sample2
+combined_df2$Sample2 = combined_df$Sample1
 
 
-sibling = rbind(combined_df,combined_df2) %>%
-  group_by(Contig1,Condition) %>%
-  #filter(Condition=="cafe_phylip_js") %>%
-  dplyr::summarise(cl=Type[which.min(Distance)],clw=sum(Type=="Within")>0) %>% 
-  filter(clw==TRUE) %>%
-  group_by(Condition,cl) %>%
-  dplyr::summarise(n=n())%>%  
-  pivot_wider(names_from = "cl", values_from = "n") %>%
-  mutate(errorrate = Across/(Across+Within),n=Across+Within)
-
-sibling%>%
-  print(n = 22) 
-
-#pal <- colorRampPalette(brewer.pal(8, "Set2"))  # make it flexible
-#my_colors <- pal(12) 
-set2_colors <- brewer.pal(8, "Set2")
-set3_colors <- brewer.pal(12, "Set3")  # 12 colors, distinct from Set2
-my_colors <- c(set2_colors, set3_colors[8])
-
-
-dark2_colors <- brewer.pal(8, "Dark2")  # max 8 colors
-
-merge(sibling,pF,by="Condition") %>%
-  mutate(pFi=1/pF) %>%
-  select(Condition,errorrate,pFi) %>%
-  filter(Condition != "cafe_phylip_co-phylog") %>%
-  filter(Condition != "kf2vec_after_placement") %>%
-  pivot_longer(cols=2:3) %>%
-  #ggplot(aes(x=reorder(Condition,value),y=value,fill=name))+
-  #  geom_bar(stat="identity",position = position_dodge())
-  ggplot(aes(x=name,y=value,fill=Condition))+
-  geom_bar(stat="identity",position = position_dodge(),color="black")+
-  #scale_fill_brewer(palette = "Set3")+
-  scale_fill_manual(values = my_colors) +
-  theme_classic()
-
-
-# Paper plot
-merge(sibling,pF,by="Condition") %>%
-  mutate(pFi=1/pF) %>%
-  select(Condition,errorrate,pFi) %>%
-  filter(Condition != "cafe_phylip_co-phylog") %>%
-  filter(Condition != "kf2vec_after_placement") %>%
-  pivot_longer(cols=2:3) %>%
-#ggplot(aes(x=reorder(Condition,value),y=value,fill=name))+
-#  geom_bar(stat="identity",position = position_dodge())
-  filter(name == "errorrate") %>%
-ggplot(aes(x=reorder(Condition, -value),y=value,fill=Condition))+
-  geom_bar(stat="identity",position = position_dodge(),color="black")+
-  #scale_fill_brewer(palette = "Set3")+
-  #scale_fill_manual(values = my_colors)+ 
-  scale_fill_manual(values = c(dark2_colors[7], dark2_colors[6], dark2_colors[6], dark2_colors[6], dark2_colors[7], dark2_colors[7], dark2_colors[7], dark2_colors[5], dark2_colors[5]))+ 
-  scale_x_discrete( labels = c('CVtree', 'JS', 'Ma', 'Eu',expression(italic("D")[italic("2")]^italic("*")), 'Cosine',  expression(italic("D")[italic("2")]^italic("S")), 'kf2vec', expression(atop("kf2vec/", "FastME2")) )) +
-  theme_classic()+
-  xlab(NULL) +
-  scale_y_continuous("Closest contig mismatch",labels = percent)+
-  theme(legend.position = "none")
-  #theme(
-  #  axis.text.x = element_text(lineheight = 0.3)  # only affects x-axis labels
-  #)# 
-ggsave("contigs_across_within_bar_D3.pdf",width=4.8,height = 4.0)
-
-
-
-# Annotated
-
-merge(sibling,pF,by="Condition") %>%
-  mutate(pFi = 1/pF) %>%
-  select(Condition, errorrate, pFi) %>%
-  filter(Condition != "cafe_phylip_co-phylog") %>%
-  filter(Condition != "kf2vec_after_placement") %>%
-  pivot_longer(cols=2:3) %>%
-  filter(name == "errorrate") %>%
-  ggplot(aes(x=reorder(Condition, -value), y=value, fill=Condition)) +
-  geom_bar(stat="identity", position=position_dodge(), color="black") +
-  geom_text(aes(label = scales::percent(value, accuracy = 0.1)), 
-            vjust = -0.3, size=3.5) +  # annotate with percent values
-  scale_fill_manual(values = c(
-    dark2_colors[7], dark2_colors[6], dark2_colors[6], dark2_colors[6],
-    dark2_colors[7], dark2_colors[7], dark2_colors[7],
-    dark2_colors[5], dark2_colors[5]
-  )) +
-  scale_x_discrete(labels = c(
-    'CVtree', 'JS', 'Ma', 'Eu',
-    expression(italic("D")[italic("2")]^italic("*")),
-    'Cosine',
-    expression(italic("D")[italic("2")]^italic("S")),
-    'kf2vec',
-    expression(atop("kf2vec/", "FastME2"))
-  )) +
-  theme_classic() +
-  xlab(NULL) +
-  scale_y_continuous("Closest contig mismatch", labels = scales::percent) +
-  theme(legend.position = "none")
-
-
-
-#scale_x_discrete(labels = c('Cosine', 'Eu', 'Ma',"CVtree", expression(italic("D")[italic("2")]^italic("*")), expression(italic("D")[italic("2")]^italic("S")), 'kf2vec' ))+
+  ######################################################################
+  #Filtered for sister contigs
   
-getwd()
+  # Find contigs that have at least one sibling (same genome, not itself)
+  intra_contigs <- combined_df %>%
+    filter(Sample1 == Sample2 & Contig1 != Contig2) %>%
+    select(Contig1, Contig2) %>%
+    unlist() %>%
+    unique()
 
-rbind(combined_df,combined_df2) %>%
-    filter(Contig1=="G000007705.part_NC_005085.1",Condition=="cafe_phylip_js")
+  length(intra_contigs)
+    
+  # Keep only rows where both contigs have siblings
+  filtered_df <- rbind(combined_df,combined_df2) %>%
+    filter(Contig1 %in% intra_contigs & Contig2 %in% intra_contigs)
+  
+  # Check how many rows were kept
+  nrow(filtered_df)
+  nrow(combined_df)
+  
 
-  dplur::summarise(mD = round(mean(Distance, na.rm = TRUE), 4)) %>%
-  pivot_wider(names_from = "Type", values_from = "mD") %>%
-  mutate(pF = Across/Within)
+  
+  # Table included in a paper (median) 
+  df_summary_filt <- filtered_df %>%
+    group_by(Sample1,Condition,Type) %>%
+    dplyr::summarise(md=mean(Distance),md=mean(Distance),n=n())  %>% 
+    pivot_wider(names_from = "Type", values_from = c("md","n")) %>%
+    filter(!is.na(n_Within)) %>% 
+    mutate(Fs = md_Across/(md_Within)) %>% 
+    group_by(Condition) %>%
+    filter(!is.na(Fs))%>%
+    #dplyr::summarise(Fsmean=mean(Fs),n=n())
+    dplyr::summarise(Fsmedian=median(Fs),n=n())
+  ggplot(aes(x=Condition,y=Fs))+
+    stat_summary()
+  
+  print(df_summary_filt)
   
   
+sibling_filtered <- filtered_df %>%
+    group_by(Contig1, Condition) %>%
+    summarise(
+      cl = Type[which.min(Distance)],  # assign closest type
+      clw = sum(Type == "Within") > 0, # has at least one Within pair
+      .groups = "drop"
+    ) %>%
+    filter(clw == TRUE) %>%
+    group_by(Condition, cl) %>%
+    summarise(n = n(), .groups = "drop") %>%
+    pivot_wider(names_from = cl, values_from = n, values_fill = 0) %>%
+    mutate(
+      n = Across + Within,
+      errorrate = Across / (Across + Within)
+    )
+
+  print(sibling_filtered,n=50)
+  
+  plot_df <- merge(sibling_filtered, df_summary_filt, by = "Condition") %>%
+    mutate(pFi = 1 / Fsmedian) %>%
+    select(Condition, errorrate, pFi) %>%
+    filter(!Condition %in% c("cafe_phylip_co-phylog", "kf2vec_after_placement")) %>%
+    pivot_longer(cols = c(errorrate, pFi), names_to = "name", values_to = "value")
+  
+
+  ggplot(plot_df, aes(x = name, y = value, fill = Condition)) +
+    geom_bar(stat = "identity", position = position_dodge(), color = "black") +
+    theme_classic() +
+    ylab("Value") +
+    xlab(NULL) +
+    scale_fill_manual(values = my_colors)  # if you have a color vector
+  
+  
+  
+  # plot
+  plot_df %>%
+    filter(name == "errorrate") %>%  # only plot errorrate
+    ggplot(aes(x = reorder(Condition, -value), y = value, fill = Condition)) +
+    geom_bar(stat = "identity", position = position_dodge(), color = "black") +
+    theme_classic() +
+    xlab(NULL) +
+    scale_y_continuous("Closest contig mismatch", labels = percent) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))  # optional: rotate labels
+ 
+  
+  
+  # Annotated paper plot (final version)
+  
+  merge(sibling_filtered, df_summary_filt, by = "Condition") %>%
+    #select(Condition, errorrate, pFi) %>%
+    filter(!Condition %in% c("cafe_phylip_co-phylog", "kf2vec_after_placement")) %>%
+    mutate(`F statistics` = Fsmedian, `Closest contig mismatch`=errorrate) %>%
+    pivot_longer(cols = c(`Closest contig mismatch`, `F statistics`), names_to = "name", values_to = "value")%>% 
+    filter(!Condition %in% c("cafe_phylip_js","cafe_phylip_cvtree")) %>%
+    #filter(name == "errorrate") %>%  # only errorrate
+  ggplot(aes(x = reorder(Condition, 1/value), y = value, fill = Condition)) +
+    facet_wrap(.~name, scales="free_y",nrow=2,strip.position = "left")+
+    geom_bar(stat = "identity", position = position_dodge(), color = "black") +
+    geom_text(aes(label = scales::percent(value, accuracy = 1)), 
+            vjust = +2, size = 2.5,color="yellow") +  # annotate bars with percentage
+   scale_fill_manual(values = c( dark2_colors[7], dark2_colors[6], dark2_colors[6], dark2_colors[7], dark2_colors[7], dark2_colors[5], dark2_colors[5]))+ 
+  scale_x_discrete( labels = c( 'Ma', 'Eu', expression(italic("D")[italic("2")]^italic("*")),  'Cosine', expression(italic("D")[italic("2")]^italic("S")), 'kf2vec', "kf2vec+tree")) +
+    theme_classic() +
+    xlab(NULL) +
+    scale_y_continuous("",labels = percent)+
+    theme(legend.position = "none",axis.title = element_blank())  # optional: rotate labels
+  ggsave("contigs_across_within_bar_D3_sister_filtered.pdf",width=4.8,height = 4.0)
+  
+  getwd()
 # sed '$!N;s/\n/,/' kmer_pl_3layer_lowerLrRate.out | awk 'BEGIN { FS = "[, ]" } ; {print $9, $21}' > kmer_pl_3layer_lowerLrRate.csv
+
+  
+  # OBSOLETE
+  # Table included in a paper (median)
+  df_summary <- combined_df %>%
+    group_by(Condition, Type) %>%
+    dplyr::summarise(mD=median(Distance))%>%
+    pivot_wider(names_from = "Type", values_from = "mD" ) %>%
+    mutate(pF=Across/Within)%>%
+    mutate(Across = if_else(grepl("kf2vec", Condition), Across / 100, Across))%>%
+    mutate(Within = if_else(grepl("kf2vec", Condition), Within / 100, Within))%>%
+    # Round numbers for display
+    mutate(
+      Across   = round(Across, 3),
+      Within   = round(Within, 3),
+      pF = round(pF, 2)
+    )
+  #df_summary$pF <- format(df_summary$pF, scientific = FALSE, nsmall = 6)
+  #print(df_summary)
+  
+  #df_summary <- df_summary %>%
+  #  mutate(Across = if_else(grepl("kf2vec", Condition), Across / 100, Across))
+  
+  print(as.data.frame(df_summary))
+  
